@@ -1,28 +1,28 @@
-const endpointTarefas = "http://localhost:3000/tarefas"
-const endpointImagens = "http://localhost:3000/imagens"
+const endpointTarefas = "http://localhost:3000/tarefas/"
 const botaoAdd = document.getElementById("adiciona");
 const cards = document.getElementById("cards");
 
 async function pegaApi() {
     const respostaTarefas = await fetch(endpointTarefas);
-    const respostaImagens = await fetch(endpointImagens);
     const respostaTarefasJson = await respostaTarefas.json();
-    const respostaImagensJson = await respostaImagens.json();
-    console.log(respostaImagensJson, respostaTarefasJson);
-    criaCard(respostaTarefasJson, respostaImagensJson)
+
+    console.log(respostaTarefasJson);
+    criaCard(respostaTarefasJson)
 }
 pegaApi();
 
-async function criaTarefa(titulo, prioridade, url){
+async function criaTarefa(titulo, prioridade, url, cor, corFundo){
     const conexao = await fetch(endpointTarefas, {
         method: "POST",
         headers: {
-            "Content-type ": "application/json"
+            "Content-type": "application/json"
         },
         body: JSON.stringify({
             titulo: titulo,
             prioridade: prioridade,
-            image: url
+            image: url,
+            cor: cor,
+            corFundo: corFundo
         })
     });
 
@@ -31,47 +31,160 @@ async function criaTarefa(titulo, prioridade, url){
     return conexaoConvertida;
 }
 
-function getTarefa(){
+async function getTarefa(){
     const titulo = document.querySelector("input").value;
     const prioridade = document.getElementById("option").value;
+    var url;
+    var cor;
+    var corFundo;
+
 
 
     if(prioridade === "Emergencia!") {
-        const url = "https://cdn-icons-png.flaticon.com/128/1331/1331377.png"
+        url = "https://cdn-icons-png.flaticon.com/128/1331/1331377.png"
+        cor = "#cf4a3e"
+        corFundo ="#ff8175" 
     } else if (prioridade === "Muito Urgente!"){
-        const url = "https://cdn-icons-png.flaticon.com/128/6939/6939131.png"
+        url = "https://cdn-icons-png.flaticon.com/128/5060/5060502.png"
+        cor = "#cf823e"
+        corFundo = "#ffb26e"
     } else if (prioridade === "Urgente"){
-        const url = "https://cdn-icons-png.flaticon.com/128/5060/5060502.png"
+        url = "https://cdn-icons-png.flaticon.com/128/6290/6290515.png"
+        cor = "#f2ff00"
+        corFundo = "#fbffb3"
     } else if (prioridade === "Pouco Urgente"){
-        const url = "https://cdn-icons-png.flaticon.com/128/5060/5060502.png"
+        url = "https://cdn-icons-png.flaticon.com/128/478/478027.png"
+        cor = "#a1cf3e"
+        corFundo = "#deff96"
     } else {
-        const url = "https://cdn-icons-png.flaticon.com/128/2593/2593825.png"
+        url = "https://cdn-icons-png.flaticon.com/128/2593/2593825.png"
+        cor = "#3e9acf"
+        corFundo = "#8ad4ff"
     }
 
-    criaTarefa(titulo, prioridade, url);
+    await criaTarefa(titulo, prioridade, url, cor, corFundo);
+}
+
+async function deletaCard(id){
+    const conexao = await fetch(endpointTarefas + id, {
+        method: "DELETE"
+    })
+    const conexaoConvertida = conexao.json();
+    criaCard(conexaoConvertida);
 }
 
 botaoAdd.addEventListener("click", (evento) => getTarefa());
 
-// function criaCard(tarefas, imagens){
-//     botaoAdd.addEventListener("click", (evento) => {
-//         const opcaoSelecionada = optionUrgencia.options[optionUrgencia.selectedIndex].textContent
-//         console.log(opcaoSelecionada)
+async function criaCard(tarefas){
+    await tarefas.forEach(tarefa => {
+        cards.innerHTML += 
+        `
+            <div class="card" style="background-color: ${tarefa.corFundo}; border: 4px solid ${tarefa.cor};">
+                <div class=icons>
+                    <img id="${tarefa.id}" class="imagem-icone-edit" src="https://cdn-icons-png.flaticon.com/128/5857/5857203.png"/>
+                    <img id="${tarefa.id}" class="imagem-icone-delete" src="https://cdn-icons-png.flaticon.com/128/6821/6821175.png"/>
+                </div>
+                <h1>${tarefa.titulo}</h1>
+                <img class="imagem-principal" src=${tarefa.image}></img>
+                <h1>${tarefa.prioridade}</h1>
+            </div>
+        `
+    })
 
-//         var urlImagemUrgencia
-//         imagens.forEach(imagem => {
-//             if(optionUrgencia.value === imagem.nome){
-//                 console.log("achou")
-//                 urlImagemUrgencia = imagem.url
-//            }
-//         })
-//         console.log(urlImagemUrgencia);
-//         cards.innerHTML += `
-//             <div class="card">
-//             <h2>${inputTarefa.value}</h2>
-//             <img src="${urlImagemUrgencia}"/>
-//             <h2>${opcaoSelecionada}</h2>
-//             </div>
-//         `
-//     }
-// )}
+    const botaoDelete = document.querySelectorAll(".imagem-icone-delete");
+    const botaoEdit = document.querySelectorAll(".imagem-icone-edit")
+    const icones = document.querySelector(".icons")
+    console.log(icones)
+
+    console.log(botaoDelete)
+    console.log(botaoEdit)
+    botaoDelete.forEach(botao => {
+        botao.addEventListener("click", evento => {
+            deletaCard(evento.target.id)
+        })
+    })
+
+    botaoEdit.forEach(botao => {
+        botao.addEventListener("click", evento => {
+            console.log(botao.id)
+            const divIcons = botao.parentElement
+            console.log(botao.parentElement)
+            divIcons.innerHTML = `
+                <div>
+                    <label>Digite a tarefa:</label>
+                    <input id="tarefaAtualizada" required type="text"/>
+                    <select id="optionAtualizada">
+                        <option>Emergencia!</option>
+                        <option>Muito Urgente!</option>
+                        <option>Urgente</option>
+                        <option>Pouco Urgente</option>
+                        <option>Não Urgente</option>
+                    </select>   
+                    <button id="botao-atualizar">Atualizar!</button>              
+                </div>
+            ` 
+            const botaoAtualizar = document.querySelector("#botao-atualizar")
+
+            botaoAtualizar.addEventListener("click", (evento) => {
+                const tarefaAtualizada = document.querySelector("#tarefaAtualizada").value
+                const optionAtualizada = document.querySelector("#optionAtualizada").value
+                const idAtualizado = botao.id
+                console.log(idAtualizado)
+                console.log(tarefaAtualizada)
+                console.log(optionAtualizada)
+                getTarefaAtualizada(idAtualizado, tarefaAtualizada, optionAtualizada)
+            })
+        })
+    })
+
+}
+
+async function getTarefaAtualizada(idAtualizado, tarefaAtualizada, optionAtualizada){
+    var url;
+    var cor;
+    var corFundo;
+
+    if(optionAtualizada === "Emergencia!") {
+        url = "https://cdn-icons-png.flaticon.com/128/1331/1331377.png"
+        cor = "#cf4a3e"
+        corFundo ="#ff8175" 
+    } else if (optionAtualizada === "Muito Urgente!"){
+        url = "https://cdn-icons-png.flaticon.com/128/5060/5060502.png"
+        cor = "#cf823e"
+        corFundo = "#ffb26e"
+    } else if (optionAtualizada === "Urgente"){
+        url = "https://cdn-icons-png.flaticon.com/128/6290/6290515.png"
+        cor = "#f2ff00"
+        corFundo = "#fbffb3"
+    } else if (optionAtualizada === "Pouco Urgente"){
+        url = "https://cdn-icons-png.flaticon.com/128/478/478027.png"
+        cor = "#a1cf3e"
+        corFundo = "#deff96"
+    } else {
+        url = "https://cdn-icons-png.flaticon.com/128/2593/2593825.png"
+        cor = "#3e9acf"
+        corFundo = "#8ad4ff"
+    }
+
+    await atualizaCard(idAtualizado, tarefaAtualizada,optionAtualizada,url, cor, corFundo)
+}
+
+
+async function atualizaCard(id,titulo,prioridade, url, cor, corFundo){
+    const conexao = await fetch(endpointTarefas + id, {
+        method: "PUT",
+        headers: {
+            "Content-type": "application/json"
+        },
+        body: JSON.stringify({
+            titulo: titulo,
+            prioridade: prioridade,
+            image: url,
+            cor: cor,
+            corFundo: corFundo
+        })
+    })
+    const conexaoConvertida = conexao.json();
+    criaCard(conexaoConvertida);
+}
+

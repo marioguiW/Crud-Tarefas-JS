@@ -8,15 +8,19 @@
 </head>
 <body>
     <div class="formulario" id="formulario">
-        <label>Digite a sua tarefa:</label>
-        <input type="text"/>
-        <select id="option">
-            <option>Emergencia!</option>
-            <option>Muito Urgente!</option>
-            <option>Urgente</option>
-            <option>Pouco Urgente</option>
-            <option>Não Urgente</option>
-        </select>
+        <div class="inputs">
+            <label>Digite a sua tarefa:</label>
+            <input required type="text"/>
+
+            <select id="option">
+                <option>Emergencia!</option>
+                <option>Muito Urgente!</option>
+                <option>Urgente</option>
+                <option>Pouco Urgente</option>
+                <option>Não Urgente</option>
+            </select>
+        </div>
+
         <button id="adiciona">Add</button>
     </div>
     <div class="cards" id="cards">
