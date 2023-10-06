@@ -1,12 +1,44 @@
 {
   "tarefas": [
     {
-      "titulo": "123123",
+      "titulo": "pescar",
+      "prioridade": "Muito Urgente!",
+      "image": "https://cdn-icons-png.flaticon.com/128/5060/5060502.png",
+      "cor": "#cf823e",
+      "corFundo": "#ffb26e",
+      "id": 17
+    },
+    {
+      "titulo": "Jogar bola",
+      "prioridade": "Pouco Urgente",
+      "image": "https://cdn-icons-png.flaticon.com/128/478/478027.png",
+      "cor": "#a1cf3e",
+      "corFundo": "#deff96",
+      "id": 18
+    },
+    {
+      "titulo": "PESCAR",
       "prioridade": "Emergencia!",
       "image": "https://cdn-icons-png.flaticon.com/128/1331/1331377.png",
       "cor": "#cf4a3e",
       "corFundo": "#ff8175",
-      "id": 1
+      "id": 19
+    },
+    {
+      "titulo": "PESCAR",
+      "prioridade": "Urgente",
+      "image": "https://cdn-icons-png.flaticon.com/128/6290/6290515.png",
+      "cor": "#f2ff00",
+      "corFundo": "#fbffb3",
+      "id": 20
+    },
+    {
+      "titulo": "FAZER TCC",
+      "prioridade": "Pouco Urgente",
+      "image": "https://cdn-icons-png.flaticon.com/128/478/478027.png",
+      "cor": "#a1cf3e",
+      "corFundo": "#deff96",
+      "id": 21
     }
   ]
 }

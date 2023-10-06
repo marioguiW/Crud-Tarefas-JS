@@ -6,8 +6,7 @@ async function pegaApi() {
     const respostaTarefas = await fetch(endpointTarefas);
     const respostaTarefasJson = await respostaTarefas.json();
 
-    console.log(respostaTarefasJson);
-    criaCard(respostaTarefasJson)
+    criaCard();
 }
 pegaApi();
 
@@ -28,8 +27,9 @@ async function criaTarefa(titulo, prioridade, url, cor, corFundo){
 
     const conexaoConvertida = conexao.json();
 
-    return conexaoConvertida;
+    criaCard();
 }
+
 
 async function getTarefa(){
     const titulo = document.querySelector("input").value;
@@ -75,8 +75,13 @@ async function deletaCard(id){
 
 botaoAdd.addEventListener("click", (evento) => getTarefa());
 
-async function criaCard(tarefas){
-    await tarefas.forEach(tarefa => {
+async function criaCard(){
+    const respostaTarefas = await fetch(endpointTarefas);
+    const respostaTarefasJson = await respostaTarefas.json();
+
+    cards.innerHTML = ''
+
+    await respostaTarefasJson.forEach(tarefa => {
         cards.innerHTML += 
         `
             <div class="card" style="background-color: ${tarefa.corFundo}; border: 4px solid ${tarefa.cor};">
@@ -94,10 +99,8 @@ async function criaCard(tarefas){
     const botaoDelete = document.querySelectorAll(".imagem-icone-delete");
     const botaoEdit = document.querySelectorAll(".imagem-icone-edit")
     const icones = document.querySelector(".icons")
-    console.log(icones)
 
-    console.log(botaoDelete)
-    console.log(botaoEdit)
+
     botaoDelete.forEach(botao => {
         botao.addEventListener("click", evento => {
             deletaCard(evento.target.id)
@@ -106,9 +109,9 @@ async function criaCard(tarefas){
 
     botaoEdit.forEach(botao => {
         botao.addEventListener("click", evento => {
-            console.log(botao.id)
+        
             const divIcons = botao.parentElement
-            console.log(botao.parentElement)
+        
             divIcons.innerHTML = `
                 <div>
                     <label>Digite a tarefa:</label>
@@ -129,9 +132,7 @@ async function criaCard(tarefas){
                 const tarefaAtualizada = document.querySelector("#tarefaAtualizada").value
                 const optionAtualizada = document.querySelector("#optionAtualizada").value
                 const idAtualizado = botao.id
-                console.log(idAtualizado)
-                console.log(tarefaAtualizada)
-                console.log(optionAtualizada)
+                
                 getTarefaAtualizada(idAtualizado, tarefaAtualizada, optionAtualizada)
             })
         })
